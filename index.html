@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký Khóa học Tin học Hè 2026</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e9ecef; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 450px; width: 100%; }
+        h2 { text-align: center; color: #0056b3; margin-bottom: 25px; }
+        label { font-weight: bold; margin-top: 15px; display: block; color: #333; }
+        input, select { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 14px; background: #28a745; color: white; border: none; border-radius: 6px; margin-top: 25px; cursor: pointer; font-size: 18px; font-weight: bold; transition: background 0.3s; }
+        button:hover { background: #218838; }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        #result { display: none; margin-top: 20px; text-align: center; }
+        #result h3 { color: #28a745; }
+        .zalo-btn { background: #0068ff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; margin-top: 15px; font-weight: bold; }
+        .zalo-btn:hover { background: #0052cc; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="form-container">
+        <h2>Đăng Ký Khóa Học Tin Học Hè 2026</h2>
+        <form id="regForm">
+            <label for="ten">Tên học sinh:</label>
+            <input type="text" id="ten" name="ten" placeholder="Nhập họ tên học sinh" required>
+
+            <label for="sdt">Số điện thoại phụ huynh:</label>
+            <input type="tel" id="sdt" name="sdt" placeholder="Nhập số điện thoại liên lạc" required>
+
+            <label for="lop">Chọn Lớp Học:</label>
+            <select id="lop" name="lop" required>
+                <option value="Lớp 1">Lớp 1 (Chiều T6: 14h00-15h30 & Sáng T7: 7h30-9h00)</option>
+                <option value="Lớp 2">Lớp 2 (Chiều T7: 14h00-15h30 & Sáng CN: 7h30-9h00)</option>
+            </select>
+
+            <button type="submit" id="submitBtn">Đăng Ký Ngay</button>
+        </form>
+    </div>
+
+    <div id="result">
+        <h3>🎉 Đăng ký thành công!</h3>
+        <p>Hệ thống đã ghi nhận thông tin. Phụ huynh vui lòng bấm vào nút bên dưới để tham gia nhóm Zalo của lớp, cập nhật các thông báo từ thầy Hùng nhé:</p>
+        <a id="zaloLink" href="#" target="_blank" class="zalo-btn">Tham gia nhóm Zalo Lớp Học</a>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('regForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formContainer = document.getElementById('form-container');
+    const resultDiv = document.getElementById('result');
+    const zaloLink = document.getElementById('zaloLink');
+
+    // Đường dẫn Web App của thầy đã được cấu hình tự động ở đây
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyszu_gPdzXVqhic6JY4pJ0OpAxu_IQh1bdUx8v__7DPL7EHxHEVtXKhD_f0GMQyiONJw/exec';
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitBtn.innerText = 'Đang lưu thông tin...';
+        submitBtn.disabled = true;
+
+        const formData = new FormData(form);
+        const lopChon = formData.get('lop');
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Ẩn form và hiện phần link Zalo
+            formContainer.style.display = 'none';
+            resultDiv.style.display = 'block';
+
+            // Tự động chuyển hướng đến đúng nhóm Zalo thầy gửi
+            if (lopChon === 'Lớp 1') {
+                zaloLink.href = 'https://zalo.me/g/x35lip9za5xtqgf8woig';
+            } else if (lopChon === 'Lớp 2') {
+                zaloLink.href = 'https://zalo.me/g/rcefqobfbxvzx4dapdln';
+            }
+        })
+        .catch(error => {
+            alert('Có lỗi xảy ra trong quá trình đăng ký, thầy/phụ huynh vui lòng kiểm tra lại!');
+            submitBtn.innerText = 'Đăng Ký Ngay';
+            submitBtn.disabled = false;
+        });
+    });
+</script>
+
+</body>
+</html>
